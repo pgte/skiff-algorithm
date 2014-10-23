@@ -6,7 +6,7 @@
 
 Abstract Node.js implementation of the [Raft Consensus Algorithm](http://raftconsensus.github.io/).
 
-> If you're looking for a directly usable module, take a look at [skiff](https://github.com/pgte/skiff) (LevelDB + Msgpack).
+> If you're looking for a directly usable module, take a look at [skiff](https://github.com/pgte/skiff) (on top of LevelDB + Msgpack).
 
 Contents:
 
