@@ -1,0 +1,47 @@
+{
+  "name": "skiff-algorithm",
+  "version": "0.7.6",
+  "description": "Implementation of the Raft consensus algorithm in Node.js",
+  "scripts": {
+    "test": "istanbul cover lab --  tests/*.js -l && istanbul check-coverage --statements 95 --functions 90 --lines 95 --branches 85",
+    "jshint": "jshint -c .jshintrc --exclude-path .gitignore .",
+    "codestyle": "jscs -p google lib/ index.js tests/",
+    "coverage": "open coverage/lcov-report/index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pgte/skiff.git"
+  },
+  "keywords": [
+    "raft",
+    "distributed",
+    "consensus",
+    "election",
+    "vote"
+  ],
+  "author": "pgte",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pgte/skiff/issues"
+  },
+  "homepage": "https://github.com/pgte/skiff",
+  "devDependencies": {
+    "jshint": "^2.5.6",
+    "lab": "^4.5.1",
+    "sinon": "^1.10.3",
+    "jscs": "^1.6.2",
+    "pre-commit": "0.0.9",
+    "istanbul": "^0.3.2"
+  },
+  "dependencies": {
+    "async": "^0.9.0",
+    "cuid": "^1.2.4",
+    "propagate": "^0.3.0",
+    "xtend": "^4.0.0"
+  },
+  "pre-commit": [
+    "codestyle",
+    "jshint",
+    "test"
+  ]
+}
