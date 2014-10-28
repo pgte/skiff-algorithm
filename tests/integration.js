@@ -16,8 +16,6 @@ var Transport = require('./_transport2');
 
 var domain = require('domain');
 
-var debug = require('./_debug');
-
 describe('cluster', function() {
 
   it('elects one leader', function(done) {
@@ -255,7 +253,7 @@ describe('cluster', function() {
 
       function onceLeader(leader) {
         nodes.forEach(function(node) {
-          leader.join(node, joinReplied);
+          leader.join(node, dontCare);
         });
 
         leader.command('COMMAND', {timeout: 2e3}, onCommand);
@@ -263,24 +261,11 @@ describe('cluster', function() {
 
       function onCommand(err) {
         assert(err instanceof Error);
-        assert.equal(err && err.message,
-          'timedout after 2000 ms trying to replicate log index 3');
+        assert(/timedout/.test(err.message));
         done();
       }
 
-      var index = 0;
-
-      function joinReplied(err) {
-        index ++;
-        if (index == 2) {
-          assert(err instanceof Error);
-          assert.equal(err && err.message,
-            'timedout after 3000 ms trying to replicate log index ' + index);
-        }
-        else {
-          assert(!err);
-        }
-      }
+      function dontCare() {}
     }
   );
 

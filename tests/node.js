@@ -93,7 +93,8 @@ describe('node', function() {
       if (stored) {
         stored = JSON.parse(stored);
       }
-      assert.deepEqual(stored && stored.peers, [{id: peer, metadata: 'peer metadata'}]);
+      assert.deepEqual(
+        stored && stored.peers, [{id: peer, metadata: 'peer metadata'}]);
       done();
     }
   });

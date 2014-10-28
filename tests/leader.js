@@ -60,13 +60,13 @@ describe('leader', function() {
 
     var peers = [uuid(), uuid()];
     peers.forEach(function(peer, index) {
-      node._join(peer);
       transport.listen(node.id, peer, peerListen(peer, index));
+      node._join(peer);
     });
 
     var expectedIndexes = [2, 1, 0, 1, 2, 3, 3];
     var expectedEntries = [
-      [],
+      [{term: 1, command: 'COMMAND 3', index: 3}],
       [{term: 1, command: 'COMMAND 2', index: 2}],
       [{term: 1, command: 'COMMAND 1', index: 1}],
       [{term: 1, command: 'COMMAND 2', index: 2}],
