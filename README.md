@@ -58,6 +58,7 @@ var node = Node(options);
 * `maxElectionTimeout`: the maximum election timeout. defaults to 300 ms.
 * `commandTimeout`: the maximum amount of time you're willing to wait for a command to propagate. Defaults to 3 seconds. You can override this in each command call.
 * `retainedLogEntries`: the maximum number of log entries that are committed to the state machine that should remain in memory. Defaults to 50.
+* `metadata`: to be used by plugins if necessary
 
 
 ## Node API
@@ -71,7 +72,7 @@ Makes the peer listen for peer communications. Takes the following arguments:
   * `peerId` - the identification of the peer
   * `connection` - a connection with the peer, an object implementing the Connection API (see below).
 
-### .join(peer, cb)
+### .join(peer, [peerMetadata], cb)
 
 Joins a peer into the cluster.
 
@@ -90,10 +91,6 @@ node.leave(peer, cb);
 ```
 
 The peer is a string describing the peer. The description depends on the transport you're using.
-
-### .peers
-
-An array containing all the known peers.
 
 
 ### .command(command[, options], callback)
@@ -125,6 +122,10 @@ node.command('some command', {timeout: 5000}, function(err) {
   }
 });
 ```
+
+### .peerMeta(url)
+
+Returns the peer metadata if the peer is known.
 
 
 ### Events

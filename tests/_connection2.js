@@ -5,12 +5,14 @@ var EventEmitter = require('events').EventEmitter;
 
 module.exports = Connection2;
 
-function Connection2(local, remote, hub, secondary) {
+function Connection2(local, localMetadata, remote, metadata, hub, secondary) {
   var self = this;
 
   EventEmitter.call(this);
 
   this.local = local;
+  this.localMetadata = localMetadata;
+  this.metadata = metadata;
   this.remote = remote;
   this.hub = hub;
 
@@ -23,9 +25,9 @@ function Connection2(local, remote, hub, secondary) {
 
       if (listener) {
         var otherConnection = new Connection2(
-          self.remote, self.local, hub, true);
+          self.remote, metadata, self.local, localMetadata, hub, true);
 
-        listener.call(null, self.local, otherConnection);
+        listener.call(null, self.local, self.localMetadata, otherConnection);
       }
     }, 5);
   }

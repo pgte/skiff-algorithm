@@ -15,25 +15,28 @@ var Connection = require('./_connection');
 describe('peer', function() {
 
   it('can create a peer and retains options', function(done) {
-    var options = uuid();
-    var peer = Peer(options, {transport: transport}, undefined, {id: uuid()});
-    assert.equal(peer.id, options);
+    var node = {id: uuid()};
+    var id = uuid();
+    var peer = Peer(id, 'metadata', {transport: transport}, undefined, node);
+    assert.equal(peer.id, id);
+    assert.equal(peer.metadata, 'metadata');
     done();
   });
 
   it('connects', function(done) {
-    var node = {id: uuid()};
-    var options = uuid();
-    var peer = Peer(options, {transport: transport}, undefined, node);
+    var node = {id: uuid(), metadata: 'local metadata'};
+    var id = uuid();
+    var peer = Peer(id, 'metadata', {transport: transport}, undefined, node);
     var spy = sinon.spy(transport, 'connect');
     peer.connect();
-    assert.ok(spy.withArgs(node.id, options).calledOnce);
+    assert.ok(spy.withArgs(node.id, 'local metadata', id, 'metadata').calledOnce);
     done();
   });
 
   it('cannot send messages before connected', function(done) {
-    var options = uuid();
-    var peer = Peer(options, {transport: transport}, undefined, {id: uuid()});
+    var node = {id: uuid()};
+    var id = uuid();
+    var peer = Peer(id, 'metadata', {transport: transport}, undefined, node);
     peer.send('type', 'args', function(err) {
       assert.instanceOf(err, Error);
       done();
@@ -42,7 +45,7 @@ describe('peer', function() {
 
   it('can make remote calls', function(done) {
     var options = uuid();
-    var peer = Peer(options, {transport: transport}, undefined, {id: uuid()});
+    var peer = Peer(options, 'metadata', {transport: transport}, undefined, {id: uuid()});
     var conn = peer.connect();
     var spy = sinon.spy(conn, 'send');
     peer.send('type', 'args', invoked);
@@ -58,7 +61,7 @@ describe('peer', function() {
 
   it('serializes remote calls', function(done) {
     var id = uuid();
-    var peer = Peer(id, {transport: transport}, undefined, {id: uuid()});
+    var peer = Peer(id, 'metadata', {transport: transport}, undefined, {id: uuid()});
     transport.listen(uuid(), id, listen);
     peer.connect();
 
@@ -89,7 +92,7 @@ describe('peer', function() {
 
   it('replies to remote calls', function(done) {
     var id = uuid();
-    var peer = Peer(id, {transport: transport}, undefined, {id: uuid()});
+    var peer = Peer(id, 'metadata', {transport: transport}, undefined, {id: uuid()});
     transport.listen(uuid(), id, listen);
     peer.connect();
 
@@ -121,7 +124,7 @@ describe('peer', function() {
 
   it('does not call callbacks twice', function(done) {
     var id = uuid();
-    var peer = Peer(id, {transport: transport}, undefined, {id: uuid()});
+    var peer = Peer(id, 'metadata', {transport: transport}, undefined, {id: uuid()});
     transport.listen(uuid(), id, listen);
     peer.connect();
 
@@ -135,7 +138,7 @@ describe('peer', function() {
 
   it('is able to disconnect', function(done) {
     var id = uuid();
-    var peer = Peer(id, {transport: transport}, undefined, {id: uuid()});
+    var peer = Peer(id, 'metadata', {transport: transport}, undefined, {id: uuid()});
     peer.connect();
     peer.once('connection closed', done);
     peer.disconnect();
@@ -143,7 +146,7 @@ describe('peer', function() {
 
   it('emits an error if disconnect errors', function(done) {
     var id = uuid();
-    var peer = Peer(id, {transport: transport}, undefined, {id: uuid()});
+    var peer = Peer(id, 'metadata', {transport: transport}, undefined, {id: uuid()});
 
     var close = Connection.prototype.close;
     Connection.prototype.close = function(cb) {

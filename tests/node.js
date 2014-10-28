@@ -81,7 +81,7 @@ describe('node', function() {
   it('saves peer data as ids', function(done) {
     var node = NodeC();
     var peer = uuid();
-    node._join(peer);
+    node._join(peer, 'peer metadata');
 
     node.save(saved);
 
@@ -93,7 +93,7 @@ describe('node', function() {
       if (stored) {
         stored = JSON.parse(stored);
       }
-      assert.deepEqual(stored && stored.peers, [peer]);
+      assert.deepEqual(stored && stored.peers, [{id: peer, metadata: 'peer metadata'}]);
       done();
     }
   });
@@ -101,10 +101,15 @@ describe('node', function() {
   it('loads peer data from persistence', function(done) {
     var id = uuid();
     var peer = uuid();
-    persistence.store.meta[id] = JSON.stringify({peers: [peer]});
+    persistence.store.meta[id] = JSON.stringify(
+      {peers: [{id: peer, metadata: 'some peer metadata'}]}
+    );
+
     var node = NodeC({id: id});
     node.once('loaded', function() {
-      assert.equal(node.commonState.persisted.peers[0].id, peer);
+      var ppeer = node.commonState.persisted.peers[0];
+      assert.equal(ppeer.id, peer);
+      assert.equal(ppeer.metadata, 'some peer metadata');
       done();
     });
   });
@@ -135,7 +140,7 @@ describe('node', function() {
 
   it('can\'t join self', function(done) {
     var node = NodeC();
-    node.join(node.id, function(err) {
+    node.join(node.id, 'some metadata', function(err) {
       assert.equal(err && err.message, 'can\'t join self');
       done();
     });

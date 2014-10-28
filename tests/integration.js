@@ -16,6 +16,8 @@ var Transport = require('./_transport2');
 
 var domain = require('domain');
 
+var debug = require('./_debug');
+
 describe('cluster', function() {
 
   it('elects one leader', function(done) {
@@ -77,6 +79,7 @@ describe('cluster', function() {
       Cluster(5, onLeader);
 
       function onLeader(leader) {
+        // debug(leader);
         var node = NodeC({standby: true});
         node.listen(node.id);
 
