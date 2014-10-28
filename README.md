@@ -123,6 +123,11 @@ node.command('some command', {timeout: 5000}, function(err) {
 });
 ```
 
+Command options are:
+
+* `timeout`: maximum time waiting to replicate to a majority. Defaults to node `options.commandTimeout`, which defaults to to 3000 (3 seconds).
+* `waitForNode`: node id to wait to commit to. This may be useful to enforce read-your-writes on proxying clients. Defaults to `undefined`.
+
 ### .peerMeta(url)
 
 Returns the peer metadata if the peer is known.

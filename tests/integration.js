@@ -304,4 +304,27 @@ describe('cluster', function() {
     }
   });
 
+  it('can be told to wait for a node', function(done) {
+    Cluster(5, onLeader);
+
+    function onLeader(leader, nodes) {
+      var node = nodes[nodes.length - 1];
+      var options = {waitForNode: node.id};
+      leader.command('VERY IMPORTANT COMMAND', options, commanded);
+
+      function commanded(err) {
+        if (err) {
+          throw err;
+        }
+
+        // check if node has command
+        var commands = persistence.store.commands[node.id];
+        var lastCommand = commands[commands.length - 1];
+        assert.equal(lastCommand, 'VERY IMPORTANT COMMAND');
+        done();
+      }
+    }
+
+  });
+
 });
