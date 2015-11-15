@@ -39,7 +39,7 @@ var node = Node();
 or, with options:
 
 ```javascript
-options = {
+var options = {
   // ...
 };
 var node = Node(options);
